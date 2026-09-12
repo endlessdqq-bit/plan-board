@@ -2,12 +2,10 @@
 <html lang="ru">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
-<style>html{color-scheme:light dark}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 </head>
 <body>
 <title>Дорожная карта роста</title>
-<script src="https://telegram.org/js/telegram-web-app.js"></script>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600;700&family=Unbounded:wght@600;700&display=swap">
 <style>
@@ -83,7 +81,6 @@
     margin:0;background:var(--ground);color:var(--ink);
     font-family:'Golos Text',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
     font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased;
-    -webkit-tap-highlight-color:transparent;
   }
   button{font-family:inherit;cursor:pointer}
   [contenteditable]{outline:none}
@@ -384,15 +381,6 @@
   }
   .toast button:hover{background:color-mix(in srgb,var(--ground) 15%,transparent)}
 
-  /* ---- import modal ---- */
-  .modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.5);display:none;align-items:center;justify-content:center;padding:20px;z-index:60}
-  .modal-bg.show{display:flex}
-  .modal{background:var(--surface);border:1px solid var(--border);border-radius:14px;box-shadow:var(--shadow-lift);width:100%;max-width:440px;padding:18px}
-  .modal h3{margin:0 0 6px;font-family:'Unbounded',system-ui,sans-serif;font-size:16px}
-  .modal p{margin:0 0 12px;color:var(--muted);font-size:12.5px}
-  .modal textarea{width:100%;height:140px;resize:vertical;border:1px solid var(--border-strong);border-radius:9px;padding:10px;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12px;background:var(--surface-2);color:var(--ink)}
-  .modal-row{display:flex;gap:8px;justify-content:flex-end;margin-top:12px}
-
   @media (max-width:640px){
     .wrap{padding:16px 12px 50px}
     .col{flex-basis:84vw;width:84vw}
@@ -404,9 +392,51 @@
   }
   @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
   input[type=file]{display:none}
+
+  /* ---- навигация (переключатель страниц) ---- */
+  .nav{display:flex;gap:8px;overflow-x:auto;padding:2px 0 16px;scrollbar-width:none;-ms-overflow-style:none}
+  .nav::-webkit-scrollbar{display:none}
+  .navtab{flex:0 0 auto;white-space:nowrap;background:var(--surface);color:var(--muted);
+    border:1px solid var(--border-strong);border-radius:99px;padding:9px 16px;font-size:13px;font-weight:600;
+    box-shadow:var(--shadow);font-family:'Unbounded',system-ui,sans-serif;letter-spacing:-.01em;transition:.14s}
+  .navtab:hover{background:var(--surface-2);color:var(--ink)}
+  .navtab.active{background:var(--gold);border-color:var(--gold);color:#241a06}
+  .navtab.add{padding:9px 14px;color:var(--gold);font-size:16px;line-height:1}
+  /* ---- страницы-таблицы ---- */
+  .tv-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:2px 0 12px;flex-wrap:wrap}
+  .tv-title-wrap{display:flex;align-items:center;gap:10px;min-width:0}
+  .tv-icon{font-size:22px;line-height:1}
+  .tv-title{font-family:'Unbounded',system-ui,sans-serif;font-weight:700;font-size:clamp(20px,3vw,30px);letter-spacing:-.01em}
+  .tv-count{font-size:12px;font-weight:600;color:var(--muted);background:var(--surface);border:1px solid var(--border);padding:3px 10px;border-radius:99px;white-space:nowrap}
+  .tv-tools{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:12px}
+  .tv-search{flex:1;min-width:170px;display:flex;align-items:center;background:var(--surface);border:1px solid var(--border-strong);border-radius:9px;padding:0 10px;box-shadow:var(--shadow)}
+  .tv-search input{flex:1;border:none;outline:none;background:transparent;color:var(--ink);font-family:inherit;font-size:13.5px;padding:9px 4px}
+  .tv-scroll{overflow-x:auto;border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);background:var(--surface);max-height:calc(100vh - 210px)}
+  .tv-table{border-collapse:separate;border-spacing:0;width:100%;min-width:560px;font-size:13.5px}
+  .tv-table th,.tv-table td{border-bottom:1px solid var(--border);border-right:1px solid var(--border);vertical-align:top;text-align:left}
+  .tv-table thead th{background:var(--surface-2);position:sticky;top:0;z-index:2;padding:9px 10px;font-weight:600;color:var(--ink);white-space:nowrap;border-top:3px solid var(--gold)}
+  .tv-table td{padding:0}
+  .tv-table .cell{padding:9px 10px;min-height:38px;min-width:120px;max-width:340px;white-space:pre-wrap;word-break:break-word;line-height:1.4}
+  .tv-table .cell:focus{box-shadow:inset 0 0 0 2px var(--gold);background:var(--surface-2);border-radius:4px}
+  .tv-table .rownum{width:36px;min-width:36px;text-align:center;color:var(--faint);font-variant-numeric:tabular-nums;background:var(--surface-2);position:sticky;left:0;z-index:1;padding:9px 6px;font-size:12px}
+  .tv-table thead .rownum{z-index:3}
+  .colname{display:inline-block;min-width:40px;outline:none;font-weight:600}
+  .colname:focus{box-shadow:0 0 0 2px var(--gold);border-radius:4px;background:var(--surface)}
+  .delcol{margin-left:8px;border:none;background:transparent;color:var(--faint);cursor:pointer;font-size:11px;opacity:0;transition:.12s;padding:0 2px}
+  .tv-table th:hover .delcol{opacity:1}
+  .delcol:hover{color:var(--danger)}
+  .rowdel{width:40px;text-align:center;background:var(--surface)}
+  .delrow{border:none;background:transparent;color:var(--faint);cursor:pointer;font-size:14px;padding:8px;opacity:.55}
+  .delrow:hover{color:var(--danger);opacity:1}
+  .tv-empty{color:var(--muted);padding:44px 12px;text-align:center;font-size:14px}
+  @media (max-width:640px){.tv-table .cell{min-width:92px}.tv-scroll{max-height:calc(100vh - 190px)}}
+  /* ---- задачи на сегодня (из Плана недели) ---- */
+  .today{background:linear-gradient(180deg,var(--gold-tint),var(--surface));border:1px solid var(--gold);border-radius:var(--radius);box-shadow:var(--shadow);padding:14px 16px 15px;margin:0 0 16px}
 </style>
 
 <div class="wrap">
+  <div class="nav" id="nav"></div>
+  <div id="boardView">
   <header>
     <div class="eyebrow">План · соцсети → клиенты → чек → доход</div>
     <h1>Дорожная карта роста</h1>
@@ -435,8 +465,9 @@
       <button class="btn ghost" id="addColBtn"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>Этап</button>
       <div class="spacer"></div>
       <button class="btn ghost" id="themeBtn" title="Тема оформления"><span id="themeIcon">🌗</span><span id="themeLabel">Авто</span></button>
-      <button class="btn ghost" id="backupBtn"><svg viewBox="0 0 24 24"><path d="M9 5h6M9 5a2 2 0 1 0 4 0M8 5H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/></svg>Копировать бэкап</button>
+      <button class="btn ghost" id="backupBtn"><svg viewBox="0 0 24 24"><path d="M12 3v12m0 0l-4-4m4 4l4-4M4 17v3h16v-3"/></svg>Копия</button>
       <button class="btn ghost" id="importBtn"><svg viewBox="0 0 24 24"><path d="M12 21V9m0 0l-4 4m4-4l4 4M4 7V4h16v3"/></svg>Загрузить</button>
+      <input type="file" id="fileInput" accept="application/json,.json">
       <button class="btn ghost" id="resetBtn"><svg viewBox="0 0 24 24"><path d="M4 12a8 8 0 1 1 2.3 5.6M4 20v-4h4"/></svg>Вернуть план</button>
       <span class="sync local" id="sync"><span class="sdot"></span><span id="syncText">сохраняется</span></span>
     </div>
@@ -450,24 +481,15 @@
     <div class="notes-body" id="notesBody" contenteditable="true" spellcheck="false" data-ph="Впиши что угодно: идею, ссылку, номер, быструю задачу…"></div>
   </section>
 
+  <section class="today" id="today" hidden></section>
   <section class="focus" id="focus" hidden></section>
 
   <div class="board" id="board"></div>
+  </div>
+  <div id="tableView" hidden></div>
 </div>
 
 <div class="toast" id="toast"><span id="toastMsg"></span><button id="toastAct">Вернуть</button></div>
-
-<div class="modal-bg" id="modalBg">
-  <div class="modal">
-    <h3>Загрузить план из бэкапа</h3>
-    <p>Вставь JSON, который раньше скопировал кнопкой «Копировать бэкап».</p>
-    <textarea id="importText" placeholder='{"columns":[...]}'></textarea>
-    <div class="modal-row">
-      <button class="btn ghost" id="importCancel">Отмена</button>
-      <button class="btn" id="importDo">Загрузить</button>
-    </div>
-  </div>
-</div>
 
 <script>
 (function(){
@@ -476,7 +498,7 @@
   /* ---------- default plan ---------- */
   function defaultState(){
     return {
-      v:2, updatedAt:0, target:"", notes:"",
+      v:2, updatedAt:0, target:"", notes:"", tables:defaultTables(), seedsV:SEEDS_V,
       columns:[
         {id:cid(),title:"Фаза 1 · Фундамент",sub:"Дни 1–5 · упаковка и позиционирование",accent:"#6366F1",cards:[
           c("Сформулировать оффер: чем занимаюсь, для кого, какой результат — в одном предложении"),
@@ -531,15 +553,184 @@
   function cid(){return 'c'+Math.random().toString(36).slice(2,9)+Date.now().toString(36).slice(-3)}
   function c(text,note){return {id:cid(),text:text,note:note||"",done:false,priority:false,due:""}}
 
+  /* ===== Таблицы (страницы) — единое приложение с картой ===== */
+  function clientsSeed(){return [
+    ["Вера","парикхмахерская\nцветочный","35-40к","каталог товаров\nзапись клиентов","2026-09-02","","","","","","создать проект и продвинуть через блогера"],
+    ["динара","колорист","","запись клиентов","15 сентября","","","","","","предлагать клиентам (показать визуал + бесплатный аудит); понравится — обсудим цены"],
+    ["эдик","массажист","25к","запись клиентов","2026-09-10"],
+    ["ксения","магазин одежды","25к","веб-магазин","готово","","7к","30 сентября","бонусная система · смм · внедрение","просить сарафанку"],
+    ["элина","цветочный","20к","бонусная система","в процессе","","6к","1 января"],
+    ["полина","магазин одежды","11к","веб-магазин","готово","","","11к","","просить сарафанку"],
+    ["магазин ганг","позвонить"],
+    ["икона эрнест","подумать концепцию / идею"],
+    ["вид сверху ресторан","посмотреть, есть ли сайт"],
+    ["татьяна","грумер","","сайт","2026-09-10","","","","","напомнить о себе"],
+    ["гуля","тренер","","запись клиентов","2026-09-10","","","","","напомнить о себе"],
+    ["лиля","косметолог","","","2026-09-05","","","","","напомнить о себе"],
+    ["soroka_uss","магазин одежды","","веб-магазин","2026-09-03","","","","","напомнить о себе"],
+    ["эдик","шины","","","","","","","","предложение"]
+  ];}
+  function padRow(r,n){r=(r||[]).slice(0,n);while(r.length<n)r.push("");return r;}
+  function tid(){return 't'+Math.random().toString(36).slice(2,8)+Date.now().toString(36).slice(-3);}
+  function defaultTables(){
+    return [
+      {id:'clients',icon:'📇',title:'Клиенты',
+       columns:["Клиент","Продукт","Прайс","Проект","Когда связаться","Контакты","Аванс","Расчёт","Пакет след.","Касание","Мысли"],
+       rows:clientsSeed().map(function(r){return padRow(r,11);})},
+      {id:'tasks',icon:'✅',title:'Задачи',
+       columns:["Задача","Клиент / проект","Срок","Статус","Приоритет"],
+       rows:[["","","","",""]]},
+      {"id": "plan_week", "icon": "🗓", "title": "План недели", "columns": ["День", "Направление", "Задача и результат", "План, ч", "Факт, ч", "Статус"], "rows": [["Понедельник", "AI-креаторство", "Курс и ДЗ: 2 ч обязательной практики + 1 ч на разбор приёмов. Определить работу, которую закончишь к пятнице.", "3.0", "", "Запланировано"], ["Понедельник", "Поиск клиентов", "Выбрать 5 подходящих людей из топ-100. Написать персонально, вернуться к текущей заявке. Зафиксировать следующий шаг.", "2.0", "", "Запланировано"], ["Понедельник", "Тесты заработка", "Выбрать одну гипотезу на неделю: аудитория, проблема, предложение, контент во все соц сети.Дать старт", "2.0", "", "Запланировано"], ["Понедельник", "Медиа", "С женой выбрать 2-3 темы недели. Одна основа: задача клиента, процесс, результат. Подготовить тезисы для съёмки.", "1.5", "", "Запланировано"], ["Вторник", "AI-креаторство", "Курс и ДЗ: 2 ч обязательного задания + 1 ч практики. Сделать первую версию визуала или ролика.", "3.0", "", "Запланировано"], ["Вторник", "Поиск клиентов", "Провести согласованные звонки. Уточнить задачу, бюджет и срок. Если звонков нет — 5 персональных обращений.", "2.0", "", "Запланировано"], ["Вторник", "Тесты заработка", "Собрать минимальное демо для выбранной идеи. Записать затраченное время и расходы. Учебную работу обозначить как демо.", "2.0", "", "Запланировано"], ["Вторник", "Клиентские задачи", "Выполнить ближайшее обязательство по заказу. Если активной задачи нет — подготовить предложение заинтересованному клиенту.", "1.0", "", "Запланировано"], ["Среда", "AI-креаторство", "Курс и ДЗ: 2 ч практики + 1 ч на исправления. Сравнить результат с требованиями задания.", "3.0", "", "Запланировано"], ["Среда", "Поиск клиентов", "Вернуться к тем, кому писал. Отправить релевантный пример работы и предложить обсуждение задачи. Уточнить причины отказов.", "2.0", "", "Запланировано"], ["Среда", "Тесты заработка", "Показать демо потенциальным покупателям. Спросить, что мешает покупке. Зафиксировать ответы, а не только реакции.", "1.0", "", "Запланировано"], ["Среда", "Медиа", "С женой записать процесс или демонстрацию. Выпустить одну публикацию в её профиле и адаптировать материал для своего.", "1.0", "", "Запланировано"], ["Среда", "Свои проекты", "Устранить одну проблему, мешающую демонстрации или продаже. Заранее определить, когда улучшение считается готовым.", "1.0", "", "Запланировано"], ["Четверг", "AI-креаторство", "Курс и ДЗ: 2 ч обязательной работы + 1 ч на качество. Довести работу до сдачи, сохранить удачные настройки.", "3.0", "", "Запланировано"], ["Четверг", "Поиск клиентов", "Провести звонки и отправить предложения по обсуждённым задачам. Указать состав работ, стоимость, сроки и следующий шаг.", "2.0", "", "Запланировано"], ["Четверг", "Тесты заработка", "Проверить одну правку предложения по ответам покупателей. Сохранить ту же аудиторию, чтобы понимать причину изменений.", "1.0", "", "Запланировано"], ["Четверг", "Медиа", "Подготовить вторую публикацию: частый вопрос или разбор задачи бизнеса. Добавить понятный способ обратиться.", "1.0", "", "Запланировано"], ["Четверг", "Клиентские задачи", "Выполнить согласованный этап или ответить по заказу. Если задач нет — подготовить оценку и предложение по живому запросу.", "1.0", "", "Запланировано"], ["Пятница", "AI-креаторство", "Завершить и сдать ДЗ. Сохранить готовую работу в портфолио с пометкой «учебный проект», если это не заказ клиента.", "2.0", "", "Запланировано"], ["Пятница", "Поиск клиентов", "Вернуться к открытым предложениям. Согласовать решение или дату следующего контакта. Выбрать контакты на следующую неделю.", "2.0", "", "Запланировано"], ["Пятница", "Тесты заработка", "Свести результаты теста: показы, разговоры, оплаты, часы, расходы. Решить: продолжить, изменить или остановить.", "1.0", "", "Запланировано"], ["Пятница", "Медиа", "Опубликовать готовую работу или итог недели. Узнать источники обращений. Выбрать материал для следующей недели.", "1.0", "", "Запланировано"], ["Пятница", "Гайды", "Разобрать один гайд под текущую задачу. Записать 3 коротких вывода и применить хотя бы один.", "1.0", "", "Запланировано"], ["Пятница", "Анализ", "Заполнить лист «Итоги». Выбрать главный результат следующей недели. Перераспределить часы под реальные заказы и силы.", "1.0", "", "Запланировано"]]},
+      {"id": "plan_overview", "icon": "📅", "title": "Обзор недели", "columns": ["День", "План, ч", "Фокус дня", "Факт, ч", "Лимит, ч", "Нагрузка"], "rows": [["Понедельник", "8.5", "Выбрать предложение и начать обращения", "", "8.0", "Сократи план"], ["Вторник", "8", "Сделать демо и обсудить задачи клиентов", "", "8.0", "В пределах"], ["Среда", "8", "Показать работу и собрать обратную связь", "", "8.0", "В пределах"], ["Четверг", "8", "Доработать предложение и продолжить продажи", "", "8.0", "В пределах"], ["Пятница", "8", "Закрыть ДЗ, подвести итоги и выбрать следующий тест", "", "8.0", "В пределах"], ["Всего", "40.5", "", "", "40", ""]]},
+      {"id": "priorities", "icon": "🎯", "title": "Приоритеты", "columns": ["Направление", "Часы", "Доля недели", "Результат"], "rows": [["AI-креаторство", "14", "35%", "ДЗ минимум 10 ч. Ещё 4 ч — практика и улучшение качества."], ["Поиск клиентов", "10", "25%", "Ежедневные контакты и работа с переговорами. Начальный ориентир: 20-25 персональных касаний в неделю."], ["Тесты заработка", "7", "17%", "Один тест в неделю: гипотеза, демо, предложение покупателям, решение по результатам."], ["Медиа", "4.5", "11%", "2-3 основных публикации из одной рабочей темы. Жена — лицо бренда, твой профиль — процесс и опыт."], ["Клиентские задачи", "2", "5%", "Два гибких часа, пока заказов мало. Реальные обязательства определяют нужную загрузку."], ["Свои проекты", "1", "2%", "Одно улучшение под показ или продажу. Без бесконечной полировки."], ["Гайды", "1", "2%", "Один материал под задачу и одно практическое применение."], ["Анализ", "1", "2%", "Пятничные итоги: спрос, оплаты, часы, силы и решения."]]},
+      {"id": "rules", "icon": "📌", "title": "Правила", "columns": ["Правило", "Как применять"], "rows": [["Ритм дня", "Начинай с AI-практики, затем продажи. Блоки длиннее 90 минут дели перерывом. Обед и перерывы — сверх рабочих часов."], ["Не перегружать неделю", "40 часов — исходный ориентир. Если не успеваешь, переноси второстепенные задачи, не занимай автоматически выходные."], ["Когда пришёл заказ", "Сначала используй 2 клиентских часа. Дополнительное время забирай из тестов и своих проектов, затем из дополнительной AI-практики. Обязательное ДЗ и продажи сохраняй по возможности."], ["Если заказов пока нет", "Клиентский блок направляй на предложение по живому запросу. При изменении занятия поменяй и «Направление», чтобы сводка отражала новый план."], ["Что считать хорошим тестом", "Есть аудитория, предложение, ограничение по времени и деньгам. Итог — решение по реальным ответам или оплатам. Интерес сам по себе ещё не продажа."], ["Развитие медиа", "Сначала регулярный выпуск в Instagram жены и адаптация в твой профиль. Новые платформы добавляйте после устойчивого ритма."], ["Роли в паре", "Ты: разработка, AI-практика, оценка работ и продажи. Жена: лицо бренда, контент и первичное общение по договорённости. Её часы не входят в твои 40."], ["Цель по доходу", "Старт около 90 000 ₽ за первый месяц. Ориентир через 3 месяца — 300 000-400 000 ₽ в месяц. Здесь цель считается выручкой до расходов, не гарантией дохода."], ["Как пользоваться снова", "На новую неделю сохраняй копию файла. Меняй дату, задачи и часы, очищай факт, возвращай статусы. В «Итогах» оставляй историю и заполняй следующую колонку."], ["Как расширять план", "Для обычных правок замени существующие задачи. При добавлении строк расширь диапазоны формул в сводках; они рассчитаны на текущие строки плана."]]},
+      {"id": "weeks", "icon": "🗂", "title": "Цели по неделям", "columns": ["Период", "Главная задача"], "rows": [["Неделя 1", "Выбрать две услуги для продажи. Разобрать заявку и переговоры. Подготовить первое AI-демо и оформить профиль жены."], ["Неделя 2", "Проверить предложение на подходящих контактах, собрать причины отказов. Сдать ДЗ и начать регулярные публикации."], ["Неделя 3", "Повторить наиболее перспективный тест. Показать демо или клиентский результат. Уточнить цену и объём работ по затратам времени."], ["Неделя 4", "Сравнить спрос, оплаты, время и расходы. Выбрать одну услугу для усиления в следующем месяце."]]},
+      {"id": "results", "icon": "📊", "title": "Итоги", "columns": ["Показатель", "Неделя 1", "Неделя 2", "Неделя 3", "Неделя 4", "Как считать"], "rows": [["Начало недели", "", "", "", "", "Дата понедельника"], ["Персональные касания, шт.", "", "", "", "", "Новые и повторные обращения; один человек может получить несколько."], ["Содержательные разговоры, шт.", "", "", "", "", "Обсудили конкретную задачу и следующий шаг."], ["Предложения отправлены, шт.", "", "", "", "", "Отправлен состав работ, цена и сроки."], ["Новые оплаченные заказы, шт.", "", "", "", "", "Получена первая оплата по новому заказу."], ["Полученные оплаты, ₽", "", "", "", "", "Все поступления за неделю, включая этапные платежи."], ["Расходы бизнеса, ₽", "", "", "", "", "Инструменты, реклама, подрядчики и другие бизнес-расходы."], ["Денежный остаток недели, ₽", "", "", "", "", "Оплаты минус расходы. Это не чистая прибыль: обязательства по заказам остаются."], ["Обращения из контента, шт.", "", "", "", "", "Спросить, откуда узнали. Учитывать реальные обращения."], ["Основные публикации, шт.", "", "", "", "", "Оригинальные материалы; адаптации отдельно не считать."], ["ДЗ и учебные работы, шт.", "", "", "", "", "Завершённые и сданные задания."], ["Проверенные гипотезы, шт.", "", "", "", "", "По тесту записаны ответы, расходы и решение."], ["Рабочие часы, ч", "", "", "", "", "Сумма фактически затраченных часов за неделю."], ["Тренировки, шт.", "", "", "", "", "Ориентир — 3 в неделю."], ["Энергия, 1-10", "", "", "", "", "Субъективная оценка: достаточно ли сил и восстановления."], ["Лучший результат", "", "", "", "", "Что продвинуло доход, навык или узнаваемость."], ["Решение по тесту", "", "", "", "", "Продолжить, изменить или остановить. Коротко почему."], ["Что сократить", "", "", "", "", "Что заняло время и не приблизило к результату."], ["Приоритет следующей недели", "", "", "", "", "Один конкретный результат, которого хочешь достичь."]]}
+    ];
+  }
+  function normTables(t){
+    if(!Array.isArray(t)||!t.length)return defaultTables();
+    return t.map(function(tb){
+      var cols=(Array.isArray(tb.columns)&&tb.columns.length)?tb.columns.map(String):["Колонка 1"];
+      var rows=Array.isArray(tb.rows)?tb.rows.map(function(r){return padRow((Array.isArray(r)?r:[]).map(function(x){return x==null?"":String(x);}),cols.length);}):[];
+      return {id:tb.id||tid(),icon:tb.icon||'📄',title:tb.title||'Таблица',columns:cols,rows:rows};
+    });
+  }
+
+  var SEEDS_V=2;
+  function injectSeeds(s){
+    if(s.seedsV===SEEDS_V)return;
+    var have={}; (s.tables||[]).forEach(function(t){have[t.id]=1;});
+    defaultTables().forEach(function(seed){ if(!have[seed.id]) s.tables.push(seed); });
+    s.seedsV=SEEDS_V;
+  }
+  var view=pref('view','board'), activeTable=pref('activeTable',null), tableSearch="", tblUndo=null;
+
+  function setView(v,tblId){
+    view=v; setPref('view',v);
+    if(tblId){activeTable=tblId; setPref('activeTable',tblId);}
+    tableSearch=""; applyView();
+  }
+  function applyView(){
+    var isBoard=(view!=='table');
+    var bv=document.getElementById('boardView'), tv=document.getElementById('tableView');
+    if(bv)bv.hidden=!isBoard;
+    if(tv)tv.hidden=isBoard;
+    renderNav();
+    if(!isBoard)renderTable();
+  }
+  function renderNav(){
+    var nav=document.getElementById('nav'); if(!nav)return;
+    var h='<button class="navtab'+(view!=='table'?' active':'')+'" data-view="board">🗺 Карта роста</button>';
+    (state.tables||[]).forEach(function(tb){
+      var act=(view==='table'&&activeTable===tb.id);
+      h+='<button class="navtab'+(act?' active':'')+'" data-tid="'+tb.id+'">'+(tb.icon||'📄')+' '+esc(tb.title)+'</button>';
+    });
+    h+='<button class="navtab add" id="navAdd" title="Новая таблица">＋ таблица</button>';
+    nav.innerHTML=h;
+    nav.querySelector('[data-view="board"]').onclick=function(){setView('board');};
+    nav.querySelectorAll('[data-tid]').forEach(function(b){b.onclick=function(){setView('table',b.dataset.tid);};});
+    var a=document.getElementById('navAdd'); if(a)a.onclick=addTable;
+  }
+  function currentTable(){
+    var arr=state.tables||[];
+    var t=arr.filter(function(x){return x.id===activeTable;})[0];
+    if(!t){t=arr[0]; activeTable=t?t.id:null;}
+    return t;
+  }
+  function addTable(){
+    tblUndo=JSON.stringify(state.tables);
+    var t={id:tid(),icon:'📄',title:'Новая таблица',columns:['Колонка 1','Колонка 2','Колонка 3'],rows:[['','',''],['','',''],['','','']]};
+    state.tables=(state.tables||[]).concat([t]);
+    persist(); setView('table',t.id);
+    showToast('Таблица создана',undoTables);
+  }
+  function delTable(id){
+    tblUndo=JSON.stringify(state.tables);
+    state.tables=(state.tables||[]).filter(function(x){return x.id!==id;});
+    if(activeTable===id){activeTable=(state.tables[0]||{}).id||null; setPref('activeTable',activeTable);}
+    persist(); applyView();
+    showToast('Таблица удалена',undoTables);
+  }
+  function undoTables(){
+    if(!tblUndo)return;
+    try{state.tables=JSON.parse(tblUndo);}catch(e){}
+    tblUndo=null; persist(); applyView(); hideToast();
+  }
+  function renderTable(){
+    var host=document.getElementById('tableView'); if(!host)return;
+    var tb=currentTable();
+    if(!tb){host.innerHTML='<div class="tv-empty">Нет таблиц. Нажми «＋ таблица» в переключателе, чтобы создать.</div>';return;}
+    var thead='<tr><th class="rownum">#</th>';
+    tb.columns.forEach(function(cn,ci){
+      thead+='<th><span class="colname" contenteditable="true" spellcheck="false" data-col="'+ci+'">'+esc(cn)+'</span><button class="delcol" data-delcol="'+ci+'" title="Удалить колонку">✕</button></th>';
+    });
+    thead+='<th class="rowdel"></th></tr>';
+    var body='';
+    tb.rows.forEach(function(r,ri){
+      body+='<tr data-row="'+ri+'"><td class="rownum">'+(ri+1)+'</td>';
+      tb.columns.forEach(function(cn,ci){
+        body+='<td><div class="cell" contenteditable="true" spellcheck="false" data-row="'+ri+'" data-cell="'+ci+'">'+esc(r[ci]!=null?r[ci]:"")+'</div></td>';
+      });
+      body+='<td class="rowdel"><button class="delrow" data-delrow="'+ri+'" title="Удалить строку">🗑</button></td></tr>';
+    });
+    host.innerHTML=
+      '<div class="tv-head"><div class="tv-title-wrap"><span class="tv-icon">'+(tb.icon||'📄')+'</span>'+
+        '<span class="tv-title" contenteditable="true" spellcheck="false">'+esc(tb.title)+'</span></div>'+
+        '<span class="tv-count" id="tvCount">'+tb.rows.length+' строк</span></div>'+
+      '<div class="tv-tools">'+
+        '<div class="tv-search"><input id="tvSearch" placeholder="Поиск в таблице…"></div>'+
+        '<button class="btn ghost" id="tvAddRow">＋ строка</button>'+
+        '<button class="btn ghost" id="tvAddCol">＋ колонка</button>'+
+        '<button class="btn ghost" id="tvDel">Удалить таблицу</button>'+
+      '</div>'+
+      '<div class="tv-scroll"><table class="tv-table"><thead>'+thead+'</thead><tbody id="tvBody">'+body+'</tbody></table></div>';
+    bindEdit(host.querySelector('.tv-title'),function(v){tb.title=v||'Таблица';persist();renderNav();},{singleLine:true});
+    host.querySelectorAll('.colname').forEach(function(node){
+      var ci=+node.dataset.col;
+      bindEdit(node,function(v){tb.columns[ci]=v;persist();},{singleLine:true});
+    });
+    host.querySelectorAll('.cell').forEach(function(node){
+      var ri=+node.dataset.row, ci=+node.dataset.cell;
+      bindEdit(node,function(v){ if(tb.rows[ri]){tb.rows[ri][ci]=v;persist();} },{singleLine:false});
+    });
+    host.querySelectorAll('[data-delrow]').forEach(function(b){b.onclick=function(){
+      tblUndo=JSON.stringify(state.tables);
+      tb.rows.splice(+b.dataset.delrow,1); persist(); renderTable();
+      showToast('Строка удалена',undoTables);
+    };});
+    host.querySelectorAll('[data-delcol]').forEach(function(b){b.onclick=function(){
+      tblUndo=JSON.stringify(state.tables);
+      var ci=+b.dataset.delcol; tb.columns.splice(ci,1); tb.rows.forEach(function(r){r.splice(ci,1);});
+      persist(); renderTable(); showToast('Колонка удалена',undoTables);
+    };});
+    document.getElementById('tvAddRow').onclick=function(){
+      tb.rows.push(tb.columns.map(function(){return "";})); persist(); renderTable();
+      var cells=host.querySelectorAll('#tvBody tr:last-child .cell'); if(cells[0]){cells[0].focus();placeCaretEnd(cells[0]);}
+    };
+    document.getElementById('tvAddCol').onclick=function(){
+      tb.columns.push('Колонка '+(tb.columns.length+1)); tb.rows.forEach(function(r){r.push("");}); persist(); renderTable();
+    };
+    document.getElementById('tvDel').onclick=function(){delTable(tb.id);};
+    var srch=document.getElementById('tvSearch'); srch.value=tableSearch;
+    srch.addEventListener('input',function(){
+      tableSearch=srch.value; var q=srch.value.trim().toLowerCase(); var shown=0;
+      host.querySelectorAll('#tvBody tr').forEach(function(tr){
+        var hit=!q||tr.textContent.toLowerCase().indexOf(q)>-1; tr.hidden=!hit; if(hit)shown++;
+      });
+      document.getElementById('tvCount').textContent = q ? (shown+' из '+tb.rows.length) : (tb.rows.length+' строк');
+    });
+  }
+
   /* ---------- prefs (per-device, not synced) ---------- */
   function pref(k,def){try{var v=localStorage.getItem('growth_pref_'+k);return v===null?def:JSON.parse(v);}catch(e){return def;}}
   function setPref(k,v){try{localStorage.setItem('growth_pref_'+k,JSON.stringify(v));}catch(e){}}
 
   /* ---------- state ---------- */
-  var LS_KEY="growth_plan_tg_v2";
+  var LS_KEY="growth_plan_board_v2";
   var state=load();
   var undoSnap=null, toastTimer=null, editing=false, saveTimer=null, notesTimer=null;
-  var db=null, dbRef=null, remoteReady=false, remoteSave=null, tgApp=null;
+  var db=null, dbRef=null, remoteReady=false;
   var focusOn=pref('focus',true), hideDone=pref('hideDone',false);
   var theme=(function(){try{return localStorage.getItem('growth_theme')||'auto';}catch(e){return 'auto';}})();
 
@@ -556,22 +747,25 @@
         if(typeof cd.due!=='string')cd.due="";
       });
     });
+    s.tables=normTables(s.tables);
+    injectSeeds(s);
     return s;
   }
 
   function persist(){
     state.updatedAt=Date.now();
     try{localStorage.setItem(LS_KEY,JSON.stringify(state));}catch(e){}
-    if(remoteSave){
+    if(dbRef){
       clearTimeout(saveTimer);
       saveTimer=setTimeout(function(){
-        try{remoteSave(plain(state));}catch(e){flashSync("local","на этом устройстве");}
+        try{dbRef.set(plain(state)).then(function(){flashSync("on","синхронизировано");},function(){flashSync("local","на этом устройстве");});}
+        catch(e){flashSync("local","на этом устройстве");}
       },350);
     }else{
       flashSync("local","сохранено на устройстве");
     }
   }
-  function plain(s){return JSON.parse(JSON.stringify({v:s.v,target:s.target||"",notes:s.notes||"",updatedAt:s.updatedAt||0,columns:s.columns}))}
+  function plain(s){return JSON.parse(JSON.stringify({v:s.v,target:s.target||"",notes:s.notes||"",updatedAt:s.updatedAt||0,columns:s.columns,tables:s.tables||[],seedsV:s.seedsV||0}))}
 
   function flashSync(kind,txt){
     var el=document.getElementById('sync');
@@ -579,83 +773,33 @@
     document.getElementById('syncText').textContent=txt;
   }
 
-  /* ---------- remote sync: Telegram CloudStorage OR Claude db ---------- */
-  function adoptRemote(rd){
-    state=normalize({v:rd.v||2,updatedAt:rd.updatedAt||0,target:rd.target||"",notes:rd.notes||"",columns:rd.columns});
-    try{localStorage.setItem(LS_KEY,JSON.stringify(state));}catch(e){}
-    render();
-  }
-  var CHUNK=1400; // как в текущей версии — влезает в лимит CloudStorage
-  function csSave(str){
-    var CS=tgApp&&tgApp.CloudStorage;if(!CS)return;
-    var parts=[];for(var i=0;i<str.length;i+=CHUNK)parts.push(str.slice(i,i+CHUNK));
-    try{
-      CS.setItem('plan_n',String(parts.length),function(){});
-      parts.forEach(function(pp,idx){CS.setItem('plan_'+idx,pp,function(){});});
-      for(var j=parts.length;j<parts.length+8;j++){CS.removeItem('plan_'+j,function(){});}
-      flashSync("on","синхронизировано");
-    }catch(e){flashSync("local","в приложении");}
-  }
-  function csLoad(cb){
-    var CS=tgApp&&tgApp.CloudStorage;if(!CS){cb(null);return;}
-    try{
-      CS.getItem('plan_n',function(err,nv){
-        if(err||!nv){cb(null);return;}
-        var n=parseInt(nv,10);if(!n||n<1){cb(null);return;}
-        var keys=[];for(var i=0;i<n;i++)keys.push('plan_'+i);
-        CS.getItems(keys,function(e2,map){
-          if(e2||!map){cb(null);return;}
-          var s='';for(var i=0;i<n;i++){s+=(map['plan_'+i]||'');}
-          try{var obj=JSON.parse(s);cb(obj&&obj.columns?obj:null);}catch(_){cb(null);}
-        });
-      });
-    }catch(e){cb(null);}
-  }
-  (function initRemote(){
-    var tg=window.Telegram&&window.Telegram.WebApp;
-    if(tg&&tg.initDataUnsafe!==undefined){
-      tgApp=tg;
-      try{tg.ready();tg.expand();}catch(e){}
-      try{if(tg.setBackgroundColor)tg.setBackgroundColor('secondary_bg_color');if(tg.setHeaderColor)tg.setHeaderColor('bg_color');}catch(e){}
-      try{tg.enableClosingConfirmation&&tg.enableClosingConfirmation();}catch(e){}
-      try{tg.onEvent('themeChanged',function(){if(theme==='auto')applyTheme('auto');});}catch(e){}
-      var CS=tg.CloudStorage;
-      if(CS&&CS.getItem){
-        remoteSave=function(st){csSave(JSON.stringify(st));};
-        csLoad(function(rd){
-          remoteReady=true;
+  /* ---------- cloud (db) ---------- */
+  (function initCloud(){
+    if(!(window.claude&&claude.use))return;
+    claude.use("db").then(function(d){
+      if(!d){return;}
+      db=d;
+      try{dbRef=db.doc("board/state");}catch(e){return;}
+      dbRef.get().then(function(snap){
+        remoteReady=true;
+        if(snap&&snap.exists){
+          var rd=snap.data();
           if(rd&&rd.columns){
-            if((rd.updatedAt||0)>=(state.updatedAt||0))adoptRemote(rd);
-            else csSave(JSON.stringify(plain(state)));
-          }else{csSave(JSON.stringify(plain(state)));}
-          flashSync("on","синхронизировано");
-        });
-        return;
-      }
-      flashSync("local","сохранено в приложении");return;
-    }
-    if(window.claude&&claude.use){
-      claude.use("db").then(function(d){
-        if(!d)return;
-        db=d;
-        try{dbRef=db.doc("board/state");}catch(e){return;}
-        remoteSave=function(st){dbRef.set(st).then(function(){flashSync("on","синхронизировано");},function(){flashSync("local","на этом устройстве");});};
-        dbRef.get().then(function(snap){
-          remoteReady=true;
-          if(snap&&snap.exists){
-            var rd=snap.data();
-            if(rd&&rd.columns){
-              if((rd.updatedAt||0)>=(state.updatedAt||0))adoptRemote(rd);
-              else dbRef.set(plain(state));
+            if((rd.updatedAt||0) >= (state.updatedAt||0)){
+              state=normalize({v:rd.v||2,updatedAt:rd.updatedAt||0,target:rd.target||"",notes:rd.notes||"",columns:rd.columns,tables:rd.tables,seedsV:rd.seedsV});
+              try{localStorage.setItem(LS_KEY,JSON.stringify(state));}catch(e){}
+              render();
+            }else{
+              dbRef.set(plain(state));
             }
-            flashSync("on","синхронизировано");
-          }else{dbRef.set(plain(state));flashSync("on","синхронизировано");}
-          subscribe();
-        },function(){flashSync("local","на этом устройстве");});
-      });
-      return;
-    }
-    flashSync("local","сохранено на устройстве");
+          }
+          flashSync("on","синхронизировано");
+        }else{
+          dbRef.set(plain(state));flashSync("on","синхронизировано");
+        }
+        subscribe();
+      },function(){flashSync("local","на этом устройстве");});
+    });
   })();
 
   function subscribe(){
@@ -667,7 +811,7 @@
         if(editing)return;
         var rd=snap.data();if(!rd||!rd.columns)return;
         if((rd.updatedAt||0) > (state.updatedAt||0)){
-          state=normalize({v:rd.v||2,updatedAt:rd.updatedAt||0,target:rd.target||"",notes:rd.notes||"",columns:rd.columns});
+          state=normalize({v:rd.v||2,updatedAt:rd.updatedAt||0,target:rd.target||"",notes:rd.notes||"",columns:rd.columns,tables:rd.tables,seedsV:rd.seedsV});
           try{localStorage.setItem(LS_KEY,JSON.stringify(state));}catch(e){}
           render();flashSync("on","синхронизировано");
         }
@@ -680,7 +824,6 @@
   function esc(s){return (s||"").replace(/[<>&]/g,function(m){return{"<":"&lt;",">":"&gt;","&":"&amp;"}[m]})}
   var CHECK='<svg viewBox="0 0 24 24"><path d="M5 12l5 5L19 7"/></svg>';
   function ic(p){return '<svg viewBox="0 0 24 24"><path d="'+p+'"/></svg>'}
-  function haptic(t){try{tgApp&&tgApp.HapticFeedback&&tgApp.HapticFeedback.impactOccurred(t||'light');}catch(e){}}
   var STAR='<svg viewBox="0 0 24 24"><path d="M12 3.2l2.6 5.3 5.8.8-4.2 4.1 1 5.8-5.2-2.7-5.2 2.7 1-5.8L3.6 9.3l5.8-.8z"/></svg>';
   var CAL='<svg viewBox="0 0 24 24"><path d="M7 3v3M17 3v3M4 8.5h16M5 6h14a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1z"/></svg>';
 
@@ -738,6 +881,7 @@
     document.querySelectorAll('.cards').forEach(function(l){tops[l.dataset.col]=l.scrollTop;});
 
     renderFocus();
+    renderToday();
 
     board.innerHTML='';
     var nowId=currentColId();
@@ -759,6 +903,7 @@
     Object.keys(tops).forEach(function(id){var l=document.querySelector('.cards[data-col="'+id+'"]');if(l)l.scrollTop=tops[id];});
 
     updateProgress();
+    renderNav();
   }
 
   function renderFocus(){
@@ -798,7 +943,7 @@
     data.items.forEach(function(p){
       var node=host.querySelector('.fitem[data-card="'+p.card.id+'"]');
       if(!node)return;
-      node.querySelector('[data-fcheck]').onclick=function(){p.card.done=true;persist();render();haptic();};
+      node.querySelector('[data-fcheck]').onclick=function(){p.card.done=true;persist();render();};
       node.querySelector('[data-fgo]').onclick=function(){scrollToCard(p.col.id,p.card.id);};
       var un=node.querySelector('[data-funpin]');if(un)un.onclick=function(){p.card.priority=false;persist();render();};
       var pin=node.querySelector('[data-fpin]');if(pin)pin.onclick=function(){p.card.priority=true;persist();render();};
@@ -840,6 +985,55 @@
       if(!dragData)return;e.preventDefault();host.classList.remove('drop-hot');
       var card=cardById(dragData.card);
       if(card){card.priority=true;card.done=false;persist();render();}
+    });
+  }
+
+  /* ===== Задачи на сегодня из «Плана недели» -> на Карту роста ===== */
+  var WEEKDAYS_RU=['Воскресенье','Понедельник','Вторник','Среда','Четверг','Пятница','Суббота'];
+  function planTable(){
+    var arr=state.tables||[];
+    var t=arr.filter(function(x){return x.id==='plan_week';})[0];
+    if(!t)t=arr.filter(function(x){return /план\s*недел/i.test(x.title||'');})[0];
+    return t||null;
+  }
+  function isDoneStatus(v){v=(v||'').toString().toLowerCase().trim();return v==='готово'||v==='сделано'||v==='выполнено'||v==='done';}
+  function planTodayItems(){
+    var t=planTable(); if(!t)return {items:[],table:null};
+    var cols=t.columns||[];
+    function idx(re,def){var i=cols.findIndex(function(c){return re.test(c||'');});return i<0?def:i;}
+    var di=idx(/день/i,0), ti=idx(/задач/i,2), ri=idx(/направл/i,1), si=idx(/статус/i,cols.length-1);
+    var day=WEEKDAYS_RU[new Date().getDay()];
+    var items=[];
+    (t.rows||[]).forEach(function(r,rowIndex){
+      if(((r[di]||'').toString().trim().toLowerCase())===day.toLowerCase() && !isDoneStatus(r[si])){
+        items.push({rowIndex:rowIndex, task:r[ti]||'', dir:r[ri]||''});
+      }
+    });
+    return {day:day, items:items, table:t, si:si};
+  }
+  function renderToday(){
+    var host=document.getElementById('today'); if(!host)return;
+    var d=planTodayItems();
+    if(!d.table || !d.items.length){ host.hidden=true; host.innerHTML=''; return; }
+    host.hidden=false;
+    var inner='<div class="focus-head"><span class="focus-title">🗓 Задачи на сегодня — '+esc(d.day)+'</span>'+
+      '<span class="focus-hint">из «Плана недели» · отметь галочкой, когда сделал</span></div>';
+    inner+='<div class="focus-items">'+d.items.map(function(it){
+      return '<div class="fitem today-item" data-row="'+it.rowIndex+'">'+
+        '<button class="check" data-tcheck title="Готово">'+CHECK+'</button>'+
+        '<div class="fitem-main">'+
+          '<div class="fitem-text">'+esc(it.task||'(без названия)')+'</div>'+
+          (it.dir?'<div class="fitem-meta"><span class="fitem-phase"><span class="fdot"></span>'+esc(it.dir)+'</span></div>':'')+
+        '</div>'+
+        '<div class="fitem-ctrls"><button class="fgo" data-topen title="Открыть «План недели»">'+ic("M5 12h14M13 6l6 6-6 6")+'</button></div>'+
+      '</div>';
+    }).join('')+'</div>';
+    host.innerHTML=inner;
+    var t=d.table, si=d.si;
+    host.querySelectorAll('.today-item').forEach(function(node){
+      var ri=+node.dataset.row;
+      node.querySelector('[data-tcheck]').onclick=function(){ if(t.rows[ri]){ t.rows[ri][si]='Готово'; persist(); renderToday(); } };
+      node.querySelector('[data-topen]').onclick=function(){ setView('table', t.id); };
     });
   }
 
@@ -929,7 +1123,7 @@
         '<button class="icb" data-act="del" title="Удалить">'+ic("M6 7h12M9 7V5h6v2m-8 0l1 13h8l1-13")+'</button>'+
       '</div>';
 
-    el.querySelector('.check').onclick=function(){card.done=!card.done;persist();render();haptic();};
+    el.querySelector('.check').onclick=function(){card.done=!card.done;persist();render();};
     bindEdit(el.querySelector('.card-text'),function(v){card.text=v;persist();},{singleLine:true,onEnter:function(){addCardAfter(col.id,card.id);}});
     bindEdit(el.querySelector('.card-note'),function(v){card.note=v;persist();},{singleLine:false});
 
@@ -1156,7 +1350,6 @@
     var root=document.documentElement;
     if(t==='light')root.setAttribute('data-theme','light');
     else if(t==='dark')root.setAttribute('data-theme','dark');
-    else if(tgApp&&tgApp.colorScheme)root.setAttribute('data-theme',tgApp.colorScheme==='dark'?'dark':'light');
     else root.removeAttribute('data-theme');
     var icon=t==='light'?'☀️':t==='dark'?'🌙':'🌗';
     var label=t==='light'?'Свет':t==='dark'?'Тьма':'Авто';
@@ -1175,27 +1368,36 @@
   document.getElementById('hideDoneBtn').onclick=function(){hideDone=!hideDone;setPref('hideDone',hideDone);render();};
   document.getElementById('addColBtn').onclick=addColumn;
   document.getElementById('resetBtn').onclick=function(){
-    snapshot();state=defaultState();persist();render();
+    snapshot();var _kt=state.tables;state=defaultState();state.tables=_kt;persist();render();
     showToast('План возвращён к исходному',doUndo);
   };
   document.getElementById('backupBtn').onclick=function(){
-    var data=JSON.stringify(state);
-    var ok=false;
-    try{if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(data);ok=true;}}catch(e){}
-    if(ok){showToast('Бэкап скопирован в буфер обмена',null);}
-    else{openImport(data);showToast('Скопируй текст вручную',null);}
+    var data=JSON.stringify(state,null,2);
+    var name='plan-'+new Date().toISOString().slice(0,10)+'.json';
+    if(window.claude&&claude.use){
+      claude.use("downloads").then(function(dl){
+        if(dl){dl.save({filename:name,data:data}).catch(function(){fallbackCopy(data);});}
+        else fallbackCopy(data);
+      });
+    }else fallbackCopy(data);
   };
-  var modalBg=document.getElementById('modalBg'),importText=document.getElementById('importText');
-  document.getElementById('importBtn').onclick=function(){importText.value='';modalBg.classList.add('show');};
-  document.getElementById('importCancel').onclick=function(){modalBg.classList.remove('show');};
-  modalBg.addEventListener('click',function(e){if(e.target===modalBg)modalBg.classList.remove('show');});
-  document.getElementById('importDo').onclick=function(){
-    try{var s=JSON.parse(importText.value);
-      if(s&&s.columns){snapshot();state=normalize({v:s.v||2,updatedAt:Date.now(),target:s.target||"",notes:s.notes||"",columns:s.columns});persist();render();modalBg.classList.remove('show');showToast('План загружен',doUndo);}
-      else showToast('Не похоже на план',null);
-    }catch(e){showToast('Не удалось прочитать JSON',null);}
+  function fallbackCopy(data){
+    try{navigator.clipboard.writeText(data);showToast('Копия скопирована в буфер обмена',null);}
+    catch(e){showToast('Не удалось сохранить копию',null);}
+  }
+  document.getElementById('importBtn').onclick=function(){document.getElementById('fileInput').click();};
+  document.getElementById('fileInput').onchange=function(e){
+    var f=e.target.files[0];if(!f)return;
+    var r=new FileReader();
+    r.onload=function(){
+      try{var s=JSON.parse(r.result);
+        if(s&&s.columns){snapshot();state=normalize({v:s.v||2,updatedAt:Date.now(),target:s.target||"",notes:s.notes||"",columns:s.columns});persist();render();showToast('Копия загружена',doUndo);}
+        else showToast('Файл не похож на план',null);
+      }catch(err){showToast('Не удалось прочитать файл',null);}
+    };
+    r.readAsText(f);
+    e.target.value='';
   };
-  function openImport(text){importText.value=text;modalBg.classList.add('show');}
 
   /* ---------- notes ---------- */
   var notesBody=document.getElementById('notesBody');
@@ -1215,6 +1417,7 @@
 
   initFocusDrop();
   render();
+  applyView();
 })();
 </script>
 </body>
