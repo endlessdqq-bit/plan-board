@@ -486,9 +486,46 @@
 
 <div class="toast" id="toast"><span id="toastMsg"></span><button id="toastAct">Вернуть</button></div>
 
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
 <script>
 (function(){
   "use strict";
+
+  /* ---------- Telegram CloudStorage sync ---------- */
+  var TG = window.Telegram && Telegram.WebApp;
+  var CS = TG && TG.CloudStorage;
+  var CHUNK_SIZE = 4000;
+
+  function cloudSave(data, cb){
+    if(!CS){cb&&cb();return;}
+    var json = JSON.stringify(data);
+    var n = Math.ceil(json.length / CHUNK_SIZE);
+    var meta = JSON.stringify({n:n, ts:Date.now()});
+    var done=0, total=n+1, failed=false;
+    function tick(){done++;if(done===total&&cb)cb();}
+    function fail(){if(!failed){failed=true;cb&&cb("err");}}
+    CS.setItem('s_meta', meta, function(e){if(e)fail();else tick();});
+    for(var i=0;i<n;i++){
+      CS.setItem('s_'+i, json.slice(i*CHUNK_SIZE, (i+1)*CHUNK_SIZE), function(e){if(e)fail();else tick();});
+    }
+  }
+
+  function cloudLoad(cb){
+    if(!CS){cb(null);return;}
+    CS.getItem('s_meta', function(err, val){
+      if(err||!val){cb(null);return;}
+      try{var meta=JSON.parse(val);}catch(e){cb(null);return;}
+      if(!meta||!meta.n){cb(null);return;}
+      var keys=[];
+      for(var i=0;i<meta.n;i++)keys.push('s_'+i);
+      CS.getItems(keys, function(err2, vals){
+        if(err2||!vals){cb(null);return;}
+        var json='';
+        for(var i=0;i<meta.n;i++) json += (vals['s_'+i]||'');
+        try{cb(JSON.parse(json));}catch(e){cb(null);}
+      });
+    });
+  }
 
   /* ---------- default plan ---------- */
   function defaultState(){
@@ -729,7 +766,7 @@
   var LS_KEY="growth_plan_board_v2";
   var state=load();
   var undoSnap=null, toastTimer=null, editing=false, saveTimer=null, notesTimer=null;
-  var db=null, dbRef=null, remoteReady=false;
+  /* db/dbRef/remoteReady removed — now using Telegram CloudStorage */
   var focusOn=pref('focus',true), hideDone=pref('hideDone',false);
   var theme=(function(){try{return localStorage.getItem('growth_theme')||'auto';}catch(e){return 'auto';}})();
 
@@ -754,12 +791,15 @@
   function persist(){
     state.updatedAt=Date.now();
     try{localStorage.setItem(LS_KEY,JSON.stringify(state));}catch(e){}
-    if(dbRef){
+    if(CS){
       clearTimeout(saveTimer);
       saveTimer=setTimeout(function(){
-        try{dbRef.set(plain(state)).then(function(){flashSync("on","синхронизировано");},function(){flashSync("local","на этом устройстве");});}
-        catch(e){flashSync("local","на этом устройстве");}
-      },350);
+        flashSync("saving","сохраняю…");
+        cloudSave(plain(state), function(err){
+          if(err) flashSync("local","на этом устройстве");
+          else flashSync("on","синхронизировано ☁️");
+        });
+      },500);
     }else{
       flashSync("local","сохранено на устройстве");
     }
@@ -772,51 +812,27 @@
     document.getElementById('syncText').textContent=txt;
   }
 
-  /* ---------- cloud (db) ---------- */
+  /* ---------- cloud (Telegram CloudStorage) ---------- */
   (function initCloud(){
-    if(!(window.claude&&claude.use))return;
-    claude.use("db").then(function(d){
-      if(!d){return;}
-      db=d;
-      try{dbRef=db.doc("board/state");}catch(e){return;}
-      dbRef.get().then(function(snap){
-        remoteReady=true;
-        if(snap&&snap.exists){
-          var rd=snap.data();
-          if(rd&&rd.columns){
-            if((rd.updatedAt||0) >= (state.updatedAt||0)){
-              state=normalize({v:rd.v||2,updatedAt:rd.updatedAt||0,target:rd.target||"",notes:rd.notes||"",columns:rd.columns,tables:rd.tables,seedsV:rd.seedsV});
-              try{localStorage.setItem(LS_KEY,JSON.stringify(state));}catch(e){}
-              render();
-            }else{
-              dbRef.set(plain(state));
-            }
-          }
-          flashSync("on","синхронизировано");
-        }else{
-          dbRef.set(plain(state));flashSync("on","синхронизировано");
-        }
-        subscribe();
-      },function(){flashSync("local","на этом устройстве");});
-    });
-  })();
-
-  function subscribe(){
-    if(!dbRef)return;
-    try{
-      dbRef.onSnapshot(function(snap){
-        if(!snap||!snap.exists)return;
-        if(snap.metadata&&snap.metadata.hasPendingWrites)return;
-        if(editing)return;
-        var rd=snap.data();if(!rd||!rd.columns)return;
-        if((rd.updatedAt||0) > (state.updatedAt||0)){
+    if(!CS){flashSync("local","только на устройстве");return;}
+    flashSync("saving","загружаю…");
+    cloudLoad(function(rd){
+      if(rd&&rd.columns){
+        if((rd.updatedAt||0) >= (state.updatedAt||0)){
           state=normalize({v:rd.v||2,updatedAt:rd.updatedAt||0,target:rd.target||"",notes:rd.notes||"",columns:rd.columns,tables:rd.tables,seedsV:rd.seedsV});
           try{localStorage.setItem(LS_KEY,JSON.stringify(state));}catch(e){}
-          render();flashSync("on","синхронизировано");
+          render();applyView();
+        }else{
+          cloudSave(plain(state),function(){});
         }
-      },function(){});
-    }catch(e){}
-  }
+        flashSync("on","синхронизировано ☁️");
+      }else{
+        cloudSave(plain(state),function(err){
+          flashSync(err?"local":"on", err?"на этом устройстве":"синхронизировано ☁️");
+        });
+      }
+    });
+  })();
 
   /* ---------- helpers ---------- */
   function findCol(id){return state.columns.filter(function(x){return x.id===id})[0]}
