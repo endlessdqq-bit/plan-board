@@ -485,7 +485,7 @@
   <div class="board" id="board"></div>
   </div>
   <div id="tableView" hidden></div>
-  <div id="financeView" hidden><iframe title="Личные финансы" src="./finance.html?v=20261121-2" loading="lazy"></iframe></div>
+  <div id="financeView" hidden><iframe title="Личные финансы" src="./finance.html?v=20261121-3" loading="lazy"></iframe></div>
 </div>
 
 <div class="toast" id="toast"><span id="toastMsg"></span><button id="toastAct">Вернуть</button></div>
@@ -666,7 +666,7 @@
   function renderNav(){
     var nav=document.getElementById('nav'); if(!nav)return;
     var h='<button class="navtab'+(view==='board'?' active':'')+'" data-view="board">🗺 Карта роста</button>';
-    (state.tables||[]).filter(function(tb){return tb.id!=='clients'&&tb.id!=='plan_overview';}).forEach(function(tb){
+    (state.tables||[]).filter(function(tb){return !['clients','plan_overview','priorities','weeks','rules'].includes(tb.id);}).forEach(function(tb){
       var act=(view==='table'&&activeTable===tb.id);
       h+='<button class="navtab'+(act?' active':'')+'" data-tid="'+tb.id+'">'+(tb.icon||'📄')+' '+esc(tb.title)+'</button>';
     });
@@ -680,7 +680,7 @@
   }
   function currentTable(){
     var arr=state.tables||[];
-    var visible=arr.filter(function(x){return x.id!=='clients'&&x.id!=='plan_overview';});
+    var visible=arr.filter(function(x){return !['clients','plan_overview','priorities','weeks','rules'].includes(x.id);});
     var t=visible.filter(function(x){return x.id===activeTable;})[0];
     if(!t){t=visible[0]; activeTable=t?t.id:null;}
     return t;
