@@ -425,6 +425,9 @@
   .delrow:hover{color:var(--danger);opacity:1}
   .tv-empty{color:var(--muted);padding:44px 12px;text-align:center;font-size:14px}
   @media (max-width:640px){.tv-table .cell{min-width:92px}.tv-scroll{max-height:calc(100vh - 190px)}}
+  #financeView{min-height:calc(100dvh - 95px);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;background:var(--surface);box-shadow:var(--shadow)}
+  #financeView iframe{display:block;width:100%;height:calc(100dvh - 100px);min-height:600px;border:0}
+  @media(max-width:640px){.wrap{padding:14px 8px 0}#financeView{border:0;border-radius:0;box-shadow:none}#financeView iframe{height:calc(100dvh - 75px);min-height:500px}}
   /* ---- задачи на сегодня (из Плана недели) ---- */
   .today{background:linear-gradient(180deg,var(--gold-tint),var(--surface));border:1px solid var(--gold);border-radius:var(--radius);box-shadow:var(--shadow);padding:14px 16px 15px;margin:0 0 16px}
 </style>
@@ -482,6 +485,7 @@
   <div class="board" id="board"></div>
   </div>
   <div id="tableView" hidden></div>
+  <div id="financeView" hidden><iframe title="Личные финансы" src="./finance.html" loading="lazy"></iframe></div>
 </div>
 
 <div class="toast" id="toast"><span id="toastMsg"></span><button id="toastAct">Вернуть</button></div>
@@ -651,30 +655,34 @@
     tableSearch=""; applyView();
   }
   function applyView(){
-    var isBoard=(view!=='table');
-    var bv=document.getElementById('boardView'), tv=document.getElementById('tableView');
+    var isBoard=(view==='board'), isTable=(view==='table');
+    var bv=document.getElementById('boardView'), tv=document.getElementById('tableView'), fv=document.getElementById('financeView');
     if(bv)bv.hidden=!isBoard;
-    if(tv)tv.hidden=isBoard;
+    if(tv)tv.hidden=!isTable;
+    if(fv)fv.hidden=(view!=='finance');
     renderNav();
-    if(!isBoard)renderTable();
+    if(isTable)renderTable();
   }
   function renderNav(){
     var nav=document.getElementById('nav'); if(!nav)return;
-    var h='<button class="navtab'+(view!=='table'?' active':'')+'" data-view="board">🗺 Карта роста</button>';
-    (state.tables||[]).forEach(function(tb){
+    var h='<button class="navtab'+(view==='board'?' active':'')+'" data-view="board">🗺 Карта роста</button>';
+    (state.tables||[]).filter(function(tb){return tb.id!=='clients'&&tb.id!=='plan_overview';}).forEach(function(tb){
       var act=(view==='table'&&activeTable===tb.id);
       h+='<button class="navtab'+(act?' active':'')+'" data-tid="'+tb.id+'">'+(tb.icon||'📄')+' '+esc(tb.title)+'</button>';
     });
+    h+='<button class="navtab'+(view==='finance'?' active':'')+'" data-view="finance">💰 Финансы</button>';
     h+='<button class="navtab add" id="navAdd" title="Новая таблица">＋ таблица</button>';
     nav.innerHTML=h;
     nav.querySelector('[data-view="board"]').onclick=function(){setView('board');};
+    nav.querySelector('[data-view="finance"]').onclick=function(){setView('finance');};
     nav.querySelectorAll('[data-tid]').forEach(function(b){b.onclick=function(){setView('table',b.dataset.tid);};});
     var a=document.getElementById('navAdd'); if(a)a.onclick=addTable;
   }
   function currentTable(){
     var arr=state.tables||[];
-    var t=arr.filter(function(x){return x.id===activeTable;})[0];
-    if(!t){t=arr[0]; activeTable=t?t.id:null;}
+    var visible=arr.filter(function(x){return x.id!=='clients'&&x.id!=='plan_overview';});
+    var t=visible.filter(function(x){return x.id===activeTable;})[0];
+    if(!t){t=visible[0]; activeTable=t?t.id:null;}
     return t;
   }
   function addTable(){
